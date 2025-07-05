@@ -24,8 +24,7 @@ import {
 // --- CONFIGURACIÓN DE FIREBASE ---
 // REEMPLAZA ESTOS VALORES DE MARCADOR DE POSICIÓN CON LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE
 const firebaseConfig = {
-    
-  apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
+apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
   authDomain: "cashing-out-app.firebaseapp.com",
   projectId: "cashing-out-app",
   storageBucket: "cashing-out-app.firebasestorage.app",
@@ -33,8 +32,6 @@ const firebaseConfig = {
   appId: "1:699989995395:web:d32b3ecdaa3fbc5f6550b6",
   measurementId: "G-PZFWQDQM2K"
 };
-
-// Se elimina la dependencia de __app_id para que sea compatible con cualquier entorno de despliegue.
 const appId = 'cierre-caja-app';
 
 // --- Iconos ---
@@ -68,16 +65,19 @@ const LoginScreen = ({ auth, db }) => {
     const [password, setPassword] = useState('');
     const [nombre, setNombre] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
         try {
             if (isLogin) {
                 await signInWithEmailAndPassword(auth, email, password);
             } else {
                 if (!nombre.trim()) {
                     setError("El nombre es obligatorio para registrarse.");
+                    setLoading(false);
                     return;
                 }
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
@@ -92,6 +92,12 @@ const LoginScreen = ({ auth, db }) => {
             }
         } catch (err) {
             setError(err.message);
+        } finally {
+            // No desactivar el loading aquí en caso de éxito, 
+            // porque el componente principal se encargará del cambio de vista.
+            if (!auth.currentUser) {
+                setLoading(false);
+            }
         }
     };
 
@@ -115,8 +121,8 @@ const LoginScreen = ({ auth, db }) => {
                         <label className="block mb-2 text-sm font-medium text-gray-300">Contraseña</label>
                         <input type="password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full p-2.5 bg-gray-700 border border-gray-600 rounded-lg text-white focus:ring-blue-500 focus:border-blue-500"/>
                     </div>
-                    <button type="submit" className="w-full py-3 px-5 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition duration-300">
-                        {isLogin ? 'Entrar' : 'Crear Cuenta'}
+                    <button type="submit" disabled={loading} className="w-full py-3 px-5 text-white bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition duration-300 disabled:bg-blue-800 disabled:cursor-not-allowed">
+                        {loading ? 'Verificando...' : (isLogin ? 'Entrar' : 'Crear Cuenta')}
                     </button>
                 </form>
                 <p className="text-sm text-center text-gray-400">
@@ -252,6 +258,9 @@ const ReportList = ({ db, user, setView }) => {
             data.sort((a, b) => (b.fechaCierre?.toDate() || 0) - (a.fechaCierre?.toDate() || 0));
             setReports(data);
             setLoading(false);
+        }, (error) => {
+            console.error("Error fetching reports: ", error);
+            setLoading(false);
         });
         return () => unsubscribe();
     }, [db]);
@@ -301,17 +310,18 @@ const ReportList = ({ db, user, setView }) => {
 };
 
 const ReportDetail = ({ db, setView, reportId }) => {
-    // Este componente no necesita grandes cambios, se puede mantener similar al original
     const [report, setReport] = useState(null);
     useEffect(() => {
         const unsub = onSnapshot(doc(db, `/artifacts/${appId}/public/data/cierresCaja`, reportId), (doc) => {
             setReport(doc.exists() ? { id: doc.id, ...doc.data() } : null);
+        }, (error) => {
+            console.error("Error fetching report detail: ", error);
         });
         return unsub;
     }, [db, reportId]);
 
     if (!report) return <div className="text-white p-10">Cargando...</div>;
-    const { creadoPorNombre, fechaCierre, denominaciones, montos, observaciones, calculos, estado, aprobadoPorNombre, fechaAprobacion } = report;
+    const { creadoPorNombre, fechaCierre, calculos, estado, aprobadoPorNombre, fechaAprobacion } = report;
     return (
         <div className="p-4 sm:p-6 lg:p-8">
             <div className="flex justify-between items-center mb-6">
@@ -319,7 +329,6 @@ const ReportDetail = ({ db, setView, reportId }) => {
                  <button onClick={() => setView({ name: 'list' })} className="flex items-center bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg">{icons.back} Volver</button>
             </div>
             <div className="bg-gray-100 text-gray-800 p-8 rounded-lg shadow-2xl">
-                {/* Contenido del reporte para imprimir, similar al original */}
                  <div className="text-center border-b pb-4 mb-6 border-gray-300">
                     <h2 className="text-3xl font-bold text-gray-900">Reporte de Cierre de Caja</h2>
                     <p className="text-gray-600">Fecha: {fechaCierre ? new Date(fechaCierre.toDate()).toLocaleString('es-CL') : 'N/A'}</p>
@@ -336,7 +345,6 @@ const ReportDetail = ({ db, setView, reportId }) => {
                          <p className={`text-4xl font-bold ${calculos.diferenciaTotal < 0 ? 'text-red-600' : 'text-green-700'}`}>{formatCurrency(calculos.diferenciaTotal)}</p>
                     </div>
                 </div>
-                {/* ... resto del detalle del reporte ... */}
             </div>
         </div>
     );
@@ -348,11 +356,16 @@ const AdminPanel = ({ db }) => {
 
     const fetchUsers = async () => {
         setLoading(true);
-        const usersCollection = collection(db, 'users');
-        const userSnapshot = await getDocs(usersCollection);
-        const userList = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setUsers(userList);
-        setLoading(false);
+        try {
+            const usersCollection = collection(db, 'users');
+            const userSnapshot = await getDocs(usersCollection);
+            const userList = userSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            setUsers(userList);
+        } catch (error) {
+            console.error("Error fetching users: ", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -400,10 +413,10 @@ const AdminPanel = ({ db }) => {
 export default function App() {
     const [auth, setAuth] = useState(null);
     const [db, setDb] = useState(null);
-    const [user, setUser] = useState(null); // Contendrá el objeto de auth
-    const [userData, setUserData] = useState(null); // Contendrá datos de Firestore (rol, nombre)
+    const [user, setUser] = useState(null);
+    const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [view, setView] = useState({ name: 'list' }); // list, form, detail, admin
+    const [view, setView] = useState({ name: 'list' });
 
     useEffect(() => {
         if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "TU_API_KEY") {
@@ -418,18 +431,39 @@ export default function App() {
         setDb(dbInstance);
 
         const unsubscribe = onAuthStateChanged(authInstance, async (user) => {
-            if (user) {
-                setUser(user);
-                const userDocRef = doc(dbInstance, "users", user.uid);
-                const userDoc = await getDoc(userDocRef);
-                if (userDoc.exists()) {
-                    setUserData({ uid: user.uid, ...userDoc.data() });
+            console.log("Auth state changed. User:", user);
+            try {
+                if (user) {
+                    setUser(user);
+                    const userDocRef = doc(dbInstance, "users", user.uid);
+                    const userDoc = await getDoc(userDocRef);
+                    if (userDoc.exists()) {
+                        console.log("User document found:", userDoc.data());
+                        setUserData({ uid: user.uid, ...userDoc.data() });
+                    } else {
+                        console.warn("User document not found in Firestore, creating one.");
+                        const newUserData = {
+                            uid: user.uid,
+                            email: user.email,
+                            nombre: user.displayName || user.email.split('@')[0],
+                            role: 'usuario'
+                        };
+                        await setDoc(userDocRef, newUserData);
+                        setUserData(newUserData);
+                        console.log("New user document created:", newUserData);
+                    }
+                } else {
+                    setUser(null);
+                    setUserData(null);
                 }
-            } else {
+            } catch (error) {
+                console.error("Error during auth state change processing:", error);
                 setUser(null);
                 setUserData(null);
+            } finally {
+                setLoading(false);
+                console.log("Auth loading finished.");
             }
-            setLoading(false);
         });
 
         return () => unsubscribe();
