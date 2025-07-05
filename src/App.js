@@ -24,7 +24,7 @@ import {
 // --- CONFIGURACIÓN DE FIREBASE ---
 // REEMPLAZA ESTOS VALORES DE MARCADOR DE POSICIÓN CON LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE
 const firebaseConfig = {
-    apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
+   apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
   authDomain: "cashing-out-app.firebaseapp.com",
   projectId: "cashing-out-app",
   storageBucket: "cashing-out-app.firebasestorage.app",
