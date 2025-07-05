@@ -24,12 +24,14 @@ import {
 // --- CONFIGURACIÓN DE FIREBASE ---
 // REEMPLAZA ESTOS VALORES DE MARCADOR DE POSICIÓN CON LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE
 const firebaseConfig = {
-    apiKey: "TU_API_KEY",
-    authDomain: "TU_AUTH_DOMAIN",
-    projectId: "TU_PROJECT_ID",
-    storageBucket: "TU_STORAGE_BUCKET",
-    messagingSenderId: "TU_MESSAGING_SENDER_ID",
-    appId: "TU_APP_ID"
+    const firebaseConfig = {
+  apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
+  authDomain: "cashing-out-app.firebaseapp.com",
+  projectId: "cashing-out-app",
+  storageBucket: "cashing-out-app.firebasestorage.app",
+  messagingSenderId: "699989995395",
+  appId: "1:699989995395:web:d32b3ecdaa3fbc5f6550b6",
+  measurementId: "G-PZFWQDQM2K"
 };
 // Se elimina la dependencia de __app_id para que sea compatible con cualquier entorno de despliegue.
 const appId = 'cierre-caja-app';
