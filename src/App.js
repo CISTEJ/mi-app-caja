@@ -24,7 +24,7 @@ import {
 // --- CONFIGURACIÓN DE FIREBASE ---
 // REEMPLAZA ESTOS VALORES DE MARCADOR DE POSICIÓN CON LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE
 const firebaseConfig = {
-    const firebaseConfig = {
+    
   apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
   authDomain: "cashing-out-app.firebaseapp.com",
   projectId: "cashing-out-app",
@@ -33,6 +33,7 @@ const firebaseConfig = {
   appId: "1:699989995395:web:d32b3ecdaa3fbc5f6550b6",
   measurementId: "G-PZFWQDQM2K"
 };
+
 // Se elimina la dependencia de __app_id para que sea compatible con cualquier entorno de despliegue.
 const appId = 'cierre-caja-app';
 
