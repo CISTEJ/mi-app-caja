@@ -34,16 +34,6 @@ const firebaseConfig = {
 };
 const appId = 'cierre-caja-app';
 
-// --- Iconos SVG Optimizados ---
-const icons = {
-  logo: <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-sky-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>,
-  reports: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>,
-  add: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>,
-  back: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>,
-  logout: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>,
-  admin: <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 inline" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>,
-};
-
 // --- Helpers ---
 const formatCurrency = (value) => new Intl.NumberFormat('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 }).format(value);
 const DENOMINATIONS = { billetes: [20000, 10000, 5000, 2000, 1000], monedas: [500, 100, 50, 10] };
@@ -196,7 +186,7 @@ const CierreCajaForm = ({ db, user, setView, reportToEdit }) => {
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-6">
                 <h1 className="text-2xl font-bold text-white">{reportToEdit ? 'Editar Reporte de Cierre' : 'Nuevo Reporte de Cierre'}</h1>
-                <button onClick={() => setView({ name: 'list' })} className="flex items-center bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">{icons.back} Volver</button>
+                <button onClick={() => setView({ name: 'list' })} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Volver</button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-8">
                 <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 p-6 rounded-xl shadow-xl">
@@ -253,6 +243,8 @@ const CierreCajaForm = ({ db, user, setView, reportToEdit }) => {
 const ReportList = ({ db, user, setView }) => {
     const [reports, setReports] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
 
     useEffect(() => {
         const q = query(collection(db, `/artifacts/${appId}/public/data/cierresCaja`));
@@ -276,6 +268,46 @@ const ReportList = ({ db, user, setView }) => {
         } catch (error) { console.error("Error al aprobar: ", error); }
     };
 
+    const handleExport = () => {
+        if (!startDate || !endDate) {
+            alert("Por favor, seleccione una fecha de inicio y una fecha de fin para exportar.");
+            return;
+        }
+
+        const start = new Date(startDate);
+        start.setHours(0, 0, 0, 0);
+        const end = new Date(endDate);
+        end.setHours(23, 59, 59, 999);
+
+        const filteredReports = reports.filter(report => {
+            const reportDate = report.fechaCierre?.toDate();
+            return reportDate >= start && reportDate <= end;
+        });
+
+        if (filteredReports.length === 0) {
+            alert("No se encontraron reportes en el rango de fechas seleccionado.");
+            return;
+        }
+
+        const dataToExport = filteredReports.map(r => ({
+            "Fecha de Cierre": r.fechaCierre ? new Date(r.fechaCierre.toDate()).toLocaleString('es-CL') : 'N/A',
+            "Creado Por": r.creadoPorNombre,
+            "Estado": r.estado,
+            "Efectivo Real": r.calculos.efectivoReal,
+            "Total Real": r.calculos.totalReal,
+            "Total Teórico": r.calculos.totalTeorico,
+            "Diferencia": r.calculos.diferenciaTotal,
+            "Observaciones": r.observaciones,
+            "Aprobado Por": r.aprobadoPorNombre || '',
+            "Fecha Aprobación": r.fechaAprobacion ? new Date(r.fechaAprobacion.toDate()).toLocaleString('es-CL') : '',
+        }));
+
+        const worksheet = window.XLSX.utils.json_to_sheet(dataToExport);
+        const workbook = window.XLSX.utils.book_new();
+        window.XLSX.utils.book_append_sheet(workbook, worksheet, "Reportes");
+        window.XLSX.writeFile(workbook, `Reportes_Caja_${startDate}_a_${endDate}.xlsx`);
+    };
+
     if (loading) return <div className="text-white text-center p-10">Cargando reportes...</div>;
 
     const canApprove = user.role === 'administrador' || user.role === 'revisor';
@@ -284,17 +316,36 @@ const ReportList = ({ db, user, setView }) => {
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white flex items-center">{icons.reports} Historial de Cierres de Caja</h1>
+                    <h1 className="text-2xl font-bold text-white">Historial de Cierres de Caja</h1>
                     <p className="text-slate-400 mt-1">Aquí puedes ver, editar y aprobar los reportes.</p>
                 </div>
-                <button onClick={() => setView({ name: 'form' })} className="flex items-center bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50">{icons.add} Nuevo Cierre</button>
+                <button onClick={() => setView({ name: 'form' })} className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50">Nuevo Cierre</button>
             </div>
+            
+            <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 rounded-xl shadow-xl p-4 mb-6 flex flex-col sm:flex-row items-center gap-4">
+                <div className="flex-grow">
+                    <p className="text-white font-semibold mb-2">Exportar Reportes a Excel</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label className="text-xs text-slate-400">Fecha de Inicio</label>
+                            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full mt-1 p-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white" />
+                        </div>
+                        <div>
+                            <label className="text-xs text-slate-400">Fecha de Fin</label>
+                            <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full mt-1 p-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white" />
+                        </div>
+                    </div>
+                </div>
+                <button onClick={handleExport} className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-lg shadow-green-600/30 hover:shadow-green-600/50 mt-4 sm:mt-0">Exportar a XLSX</button>
+            </div>
+
             <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 rounded-xl shadow-xl overflow-x-auto">
                 <table className="w-full text-left text-slate-300">
                     <thead className="bg-slate-900/50 text-xs text-slate-400 uppercase">
                         <tr>
                             <th className="p-4">Fecha Cierre</th>
                             <th className="p-4">Creado por</th>
+                            <th className="p-4 text-right">Efectivo Real</th>
                             <th className="p-4 text-right">Total Real</th>
                             <th className="p-4 text-right">Diferencia</th>
                             <th className="p-4 text-center">Estado</th>
@@ -306,6 +357,7 @@ const ReportList = ({ db, user, setView }) => {
                             <tr key={r.id} className="border-b border-slate-700 hover:bg-slate-700/50 transition-colors">
                                 <td className="p-4">{r.fechaCierre ? new Date(r.fechaCierre.toDate()).toLocaleString('es-CL') : 'N/A'}</td>
                                 <td className="p-4">{r.creadoPorNombre}</td>
+                                <td className="p-4 font-mono text-right text-green-400">{formatCurrency(r.calculos?.efectivoReal || 0)}</td>
                                 <td className="p-4 font-mono text-right">{formatCurrency(r.calculos?.totalReal || 0)}</td>
                                 <td className={`p-4 font-mono text-right ${r.calculos?.diferenciaTotal < 0 ? 'text-red-400' : 'text-green-400'}`}>{formatCurrency(r.calculos?.diferenciaTotal || 0)}</td>
                                 <td className="p-4 text-center">
@@ -329,8 +381,92 @@ const ReportList = ({ db, user, setView }) => {
 };
 
 const ReportDetail = ({ db, setView, reportId }) => {
-    // Implementar ReportDetail con el nuevo diseño
-    return <div className="p-8 text-white">Detalle del reporte en construcción.</div>
+    const [report, setReport] = useState(null);
+    useEffect(() => {
+        const unsub = onSnapshot(doc(db, `/artifacts/${appId}/public/data/cierresCaja`, reportId), (doc) => {
+            setReport(doc.exists() ? { id: doc.id, ...doc.data() } : null);
+        }, (error) => {
+            console.error("Error fetching report detail: ", error);
+        });
+        return unsub;
+    }, [db, reportId]);
+
+    if (!report) return <div className="text-white p-10 text-center">Cargando...</div>;
+    
+    const { creadoPorNombre, fechaCierre, denominaciones, montos, observaciones, calculos, estado, aprobadoPorNombre, fechaAprobacion } = report;
+
+    const DetailCard = ({ title, children }) => (
+        <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 p-6 rounded-xl shadow-xl">
+            <h3 className="font-bold text-lg mb-4 text-sky-400 border-b border-slate-700 pb-3">{title}</h3>
+            <div className="space-y-2 text-sm">{children}</div>
+        </div>
+    );
+
+    const DataRow = ({ label, value, className = 'text-slate-300' }) => (
+        <div className="flex justify-between items-center">
+            <span className="text-slate-400">{label}:</span>
+            <span className={`font-semibold ${className}`}>{value}</span>
+        </div>
+    );
+
+    return (
+        <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+            <div className="flex justify-between items-center mb-6">
+                 <h1 className="text-2xl font-bold text-white">Detalle de Reporte</h1>
+                 <button onClick={() => setView({ name: 'list' })} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Volver</button>
+            </div>
+            <div className="space-y-8">
+                <DetailCard title="Información General">
+                    <DataRow label="Realizado por" value={creadoPorNombre} />
+                    <DataRow label="Fecha de Cierre" value={fechaCierre ? new Date(fechaCierre.toDate()).toLocaleString('es-CL') : 'N/A'} />
+                    <DataRow label="Estado" value={estado} className={estado === 'aprobado' ? 'text-green-400' : 'text-yellow-400'} />
+                    {estado === 'aprobado' && (
+                        <>
+                            <DataRow label="Aprobado por" value={aprobadoPorNombre} />
+                            <DataRow label="Fecha Aprobación" value={fechaAprobacion ? new Date(fechaAprobacion.toDate()).toLocaleString('es-CL') : 'N/A'} />
+                        </>
+                    )}
+                </DetailCard>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <DetailCard title="Desglose Efectivo Real">
+                        {Object.entries(denominaciones).map(([key, value]) => value > 0 && (
+                            <DataRow key={key} label={key.replace('billete', 'Billetes $').replace('moneda', 'Monedas $')} value={value} />
+                        ))}
+                         <div className="border-t border-slate-700 mt-4 pt-4">
+                            <DataRow label="TOTAL EFECTIVO" value={formatCurrency(calculos.efectivoReal)} className="text-green-400 text-base" />
+                        </div>
+                    </DetailCard>
+                     <DetailCard title="Valores Teóricos">
+                        <DataRow label="Efectivo" value={formatCurrency(montos.efectivoTeorico)} />
+                        <DataRow label="Débito" value={formatCurrency(montos.debitoTeorico)} />
+                        <DataRow label="Crédito" value={formatCurrency(montos.creditoTeorico)} />
+                        <DataRow label="Prepago" value={formatCurrency(montos.prepagoTeorico)} />
+                        <DataRow label="Transferencia" value={formatCurrency(montos.transferenciaTeorica)} />
+                        <div className="border-t border-slate-700 mt-4 pt-4">
+                            <DataRow label="TOTAL TEÓRICO" value={formatCurrency(calculos.totalTeorico)} className="text-yellow-400 text-base" />
+                        </div>
+                    </DetailCard>
+                     <DetailCard title="Valores Reales">
+                        <DataRow label="Efectivo" value={formatCurrency(calculos.efectivoReal)} />
+                        <DataRow label="Débito" value={formatCurrency(montos.debitoReal)} />
+                        <DataRow label="Crédito" value={formatCurrency(montos.creditoReal)} />
+                        <DataRow label="Prepago" value={formatCurrency(montos.prepagoReal)} />
+                        <DataRow label="Transferencia" value={formatCurrency(montos.transferenciaReal)} />
+                        <div className="border-t border-slate-700 mt-4 pt-4">
+                            <DataRow label="TOTAL REAL" value={formatCurrency(calculos.totalReal)} className="text-green-400 text-base" />
+                        </div>
+                    </DetailCard>
+                </div>
+
+                {observaciones && (
+                    <DetailCard title="Observaciones">
+                        <p className="text-slate-300 whitespace-pre-wrap">{observaciones}</p>
+                    </DetailCard>
+                )}
+            </div>
+        </div>
+    );
 };
 
 const AdminPanel = ({ db }) => {
@@ -365,7 +501,7 @@ const AdminPanel = ({ db }) => {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold text-white mb-6 flex items-center">{icons.admin} Panel de Administración</h1>
+            <h1 className="text-2xl font-bold text-white mb-6">Panel de Administración</h1>
             <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 rounded-xl shadow-xl overflow-x-auto">
                 <table className="w-full text-left text-slate-300">
                     <thead className="bg-slate-900/50 text-xs text-slate-400 uppercase">
@@ -402,6 +538,12 @@ export default function App() {
     const [view, setView] = useState({ name: 'list' });
 
     useEffect(() => {
+        // Cargar script de SheetJS para exportar a XLSX
+        const script = document.createElement('script');
+        script.src = "https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js";
+        script.async = true;
+        document.body.appendChild(script);
+
         if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "TU_API_KEY") {
             console.error("Firebase config is empty or a placeholder. Please add your configuration.");
             setLoading(false);
@@ -444,7 +586,10 @@ export default function App() {
             }
         });
 
-        return () => unsubscribe();
+        return () => {
+            unsubscribe();
+            document.body.removeChild(script);
+        };
     }, []);
 
     const handleLogout = async () => {
@@ -482,7 +627,6 @@ export default function App() {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center py-3">
                         <div className="flex items-center gap-2">
-                            {icons.logo}
                             <h1 className="text-xl font-bold tracking-tight">Caja Segura</h1>
                         </div>
                         <div className="flex items-center space-x-4">
@@ -492,7 +636,7 @@ export default function App() {
                                 <p className="font-semibold text-sm">{userData.nombre}</p>
                                 <p className="text-xs text-slate-400 capitalize">{userData.role}</p>
                             </div>
-                            <button onClick={handleLogout} title="Cerrar Sesión" className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold p-2 rounded-full transition duration-300 shadow-lg shadow-red-600/30 hover:shadow-red-600/50">{icons.logout}</button>
+                            <button onClick={handleLogout} title="Cerrar Sesión" className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold p-2 rounded-lg transition duration-300 shadow-lg shadow-red-600/30 hover:shadow-red-600/50">Cerrar Sesión</button>
                         </div>
                     </div>
                 </div>
