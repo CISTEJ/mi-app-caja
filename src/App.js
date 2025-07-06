@@ -24,7 +24,7 @@ import {
 // --- CONFIGURACIÓN DE FIREBASE ---
 // REEMPLAZA ESTOS VALORES CON LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE
 const firebaseConfig = {
-    apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
+    aapiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
   authDomain: "cashing-out-app.firebaseapp.com",
   projectId: "cashing-out-app",
   storageBucket: "cashing-out-app.firebasestorage.app",
@@ -86,35 +86,35 @@ const LoginScreen = ({ auth, db }) => {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-sky-900 to-blue-900 p-4">
-            <div className="w-full max-w-md p-8 space-y-6 bg-slate-800/50 backdrop-blur-xl rounded-2xl shadow-2xl border border-sky-700/50">
+        <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-slate-900 to-black p-4">
+            <div className="w-full max-w-md p-8 space-y-8 bg-slate-800 rounded-2xl shadow-2xl border border-slate-700">
                 <div className="text-center">
-                    <h2 className="text-3xl font-bold text-white tracking-tight">{isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}</h2>
+                    <h2 className="text-4xl font-extrabold text-white tracking-tight">{isLogin ? 'Iniciar Sesión' : 'Crear Cuenta'}</h2>
                     <p className="text-slate-400 mt-2">Bienvenido al sistema de caja</p>
                 </div>
                 {error && <p className="text-red-300 bg-red-500/10 p-3 rounded-lg text-center border border-red-500/30">{error}</p>}
                 <form onSubmit={handleSubmit} className="space-y-6">
                     {!isLogin && (
                         <div>
-                            <label className="block mb-2 text-sm font-medium text-slate-300">Nombre</label>
-                            <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} required className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"/>
+                            <label className="block mb-2 text-sm font-bold text-slate-300">Nombre</label>
+                            <input type="text" value={nombre} onChange={e => setNombre(e.target.value)} required className="w-full p-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"/>
                         </div>
                     )}
                     <div>
-                        <label className="block mb-2 text-sm font-medium text-slate-300">Email</label>
-                        <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"/>
+                        <label className="block mb-2 text-sm font-bold text-slate-300">Email</label>
+                        <input type="email" value={email} onChange={e => setEmail(e.target.value)} required className="w-full p-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"/>
                     </div>
                     <div>
-                        <label className="block mb-2 text-sm font-medium text-slate-300">Contraseña</label>
-                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full p-3 bg-slate-700/50 border border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-sky-500 focus:border-sky-500 transition"/>
+                        <label className="block mb-2 text-sm font-bold text-slate-300">Contraseña</label>
+                        <input type="password" value={password} onChange={e => setPassword(e.target.value)} required className="w-full p-3 bg-slate-700 border-2 border-slate-600 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"/>
                     </div>
-                    <button type="submit" disabled={loading} className="w-full py-3 px-5 text-white bg-sky-600 hover:bg-sky-700 rounded-lg font-semibold transition duration-300 disabled:bg-sky-800 disabled:cursor-not-allowed shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50">
+                    <button type="submit" disabled={loading} className="w-full py-3 px-5 text-white bg-blue-600 hover:bg-blue-500 rounded-lg text-lg font-bold transition duration-300 disabled:bg-blue-800 disabled:cursor-not-allowed shadow-lg shadow-blue-600/40 hover:shadow-blue-500/50">
                         {loading ? 'Verificando...' : (isLogin ? 'Entrar' : 'Crear Cuenta')}
                     </button>
                 </form>
                 <p className="text-sm text-center text-slate-400">
                     {isLogin ? '¿No tienes cuenta?' : '¿Ya tienes una cuenta?'}
-                    <button onClick={() => setIsLogin(!isLogin)} className="ml-2 font-medium text-sky-400 hover:underline">
+                    <button onClick={() => setIsLogin(!isLogin)} className="ml-2 font-bold text-blue-400 hover:underline">
                         {isLogin ? 'Regístrate' : 'Inicia Sesión'}
                     </button>
                 </p>
@@ -177,64 +177,64 @@ const CierreCajaForm = ({ db, user, setView, reportToEdit }) => {
     const renderInput = (name, label, category, isCurrency = true) => (
         <div className="flex flex-col">
             <label htmlFor={name} className="text-sm font-medium text-slate-400 mb-1">{label}</label>
-            <input type="number" id={name} name={name} value={report[category][name] || ''} onChange={(e) => handleChange(e, category)} className="bg-slate-700/50 border border-slate-600 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 focus:outline-none transition" placeholder="0" min="0" />
+            <input type="number" id={name} name={name} value={report[category][name] || ''} onChange={(e) => handleChange(e, category)} className="bg-slate-700 border-2 border-slate-600 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" placeholder="0" min="0" />
             {isCurrency && <span className="text-xs text-slate-500 mt-1">{formatCurrency(report[category][name] || 0)}</span>}
         </div>
     );
     
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold text-white">{reportToEdit ? 'Editar Reporte de Cierre' : 'Nuevo Reporte de Cierre'}</h1>
-                <button onClick={() => setView({ name: 'list' })} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Volver</button>
+            <div className="flex justify-between items-center mb-8">
+                <h1 className="text-3xl font-extrabold text-white">{reportToEdit ? 'Editar Reporte de Cierre' : 'Nuevo Reporte de Cierre'}</h1>
+                <button onClick={() => setView({ name: 'list' })} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-5 rounded-lg transition duration-300">Volver</button>
             </div>
             <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 p-6 rounded-xl shadow-xl">
-                    <h2 className="text-xl font-semibold text-sky-400 mb-4 border-b border-slate-700 pb-3">Información General</h2>
+                <div className="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow-2xl">
+                    <h2 className="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-700 pb-3">Información General</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div><label className="text-sm font-medium text-slate-400 mb-1">Nombre de Usuario</label><p className="w-full bg-slate-700/50 text-slate-300 rounded-lg p-3">{user.nombre}</p></div>
-                        <div><label className="text-sm font-medium text-slate-400 mb-1">Fecha y Hora de Cierre</label><p className="w-full bg-slate-700/50 text-slate-300 rounded-lg p-3">{new Date().toLocaleString('es-CL')}</p></div>
+                        <div><label className="text-sm font-bold text-slate-400 mb-1">Nombre de Usuario</label><p className="w-full bg-slate-700 text-slate-300 rounded-lg p-3 text-lg">{user.nombre}</p></div>
+                        <div><label className="text-sm font-bold text-slate-400 mb-1">Fecha y Hora de Cierre</label><p className="w-full bg-slate-700 text-slate-300 rounded-lg p-3 text-lg">{new Date().toLocaleString('es-CL')}</p></div>
                     </div>
                 </div>
-                <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 p-6 rounded-xl shadow-xl">
-                    <h2 className="text-xl font-semibold text-sky-400 mb-4 border-b border-slate-700 pb-3">Conteo de Efectivo (Real)</h2>
+                <div className="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow-2xl">
+                    <h2 className="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-700 pb-3">Conteo de Efectivo (Real)</h2>
                     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
                         {DENOMINATIONS.billetes.map(val => <React.Fragment key={`b-${val}`}>{renderInput(`billete${val}`, `Billetes de ${formatCurrency(val)}`, 'denominaciones', false)}</React.Fragment>)}
                         {DENOMINATIONS.monedas.map(val => <React.Fragment key={`m-${val}`}>{renderInput(`moneda${val}`, `Monedas de ${formatCurrency(val)}`, 'denominaciones', false)}</React.Fragment>)}
                     </div>
-                    <div className="mt-6 text-right bg-slate-900/50 p-4 rounded-lg">
-                        <p className="text-slate-400 text-sm">Total Efectivo Real (Contado):</p>
-                        <p className="text-2xl font-bold text-green-400">{formatCurrency(efectivoReal)}</p>
+                    <div className="mt-6 text-right bg-slate-900 p-4 rounded-lg">
+                        <p className="text-slate-400 text-base">Total Efectivo Real (Contado):</p>
+                        <p className="text-3xl font-bold text-green-400">{formatCurrency(efectivoReal)}</p>
                     </div>
                 </div>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                    <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 p-6 rounded-xl shadow-xl space-y-4">
-                        <h2 className="text-xl font-semibold text-sky-400 mb-4 border-b border-slate-700 pb-3">Valores Teóricos (Sistema)</h2>
+                    <div className="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow-2xl space-y-4">
+                        <h2 className="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-700 pb-3">Valores Teóricos</h2>
                         {renderInput('efectivoTeorico', 'Efectivo Teórico', 'montos')}
                         {renderInput('debitoTeorico', 'Débito Teórico', 'montos')}
                         {renderInput('creditoTeorico', 'Crédito Teórico', 'montos')}
                         {renderInput('prepagoTeorico', 'Prepago Teórico', 'montos')}
                         {renderInput('transferenciaTeorica', 'Transferencia Teórica', 'montos')}
                     </div>
-                    <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 p-6 rounded-xl shadow-xl space-y-4">
-                        <h2 className="text-xl font-semibold text-sky-400 mb-4 border-b border-slate-700 pb-3">Valores Reales (Comprobantes)</h2>
-                        <div className="flex flex-col"><label className="text-sm font-medium text-slate-400 mb-1">Efectivo Real (Calculado)</label><p className="w-full bg-slate-900/50 text-green-400 font-bold rounded-lg p-3">{formatCurrency(efectivoReal)}</p></div>
+                    <div className="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow-2xl space-y-4">
+                        <h2 className="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-700 pb-3">Valores Reales</h2>
+                        <div className="flex flex-col"><label className="text-sm font-medium text-slate-400 mb-1">Efectivo Real (Calculado)</label><p className="w-full bg-slate-900 text-green-400 font-bold rounded-lg p-3 text-lg">{formatCurrency(efectivoReal)}</p></div>
                         {renderInput('debitoReal', 'Débito Real', 'montos')}
                         {renderInput('creditoReal', 'Crédito Real', 'montos')}
                         {renderInput('prepagoReal', 'Prepago Real', 'montos')}
                         {renderInput('transferenciaReal', 'Transferencia Real', 'montos')}
                     </div>
                 </div>
-                <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 p-6 rounded-xl shadow-xl">
-                    <h2 className="text-xl font-semibold text-sky-400 mb-4 border-b border-slate-700 pb-3">Totales y Diferencias</h2>
+                <div className="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow-2xl">
+                    <h2 className="text-2xl font-bold text-blue-400 mb-4 border-b border-slate-700 pb-3">Totales y Diferencias</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                        <div className="bg-slate-900/50 p-4 rounded-lg"><p className="text-slate-400 text-sm">Saldo Total Teórico</p><p className="text-2xl font-bold text-yellow-400">{formatCurrency(totalTeorico)}</p></div>
-                        <div className="bg-slate-900/50 p-4 rounded-lg"><p className="text-slate-400 text-sm">Saldo Total Real</p><p className="text-2xl font-bold text-green-400">{formatCurrency(totalReal)}</p></div>
-                        <div className="bg-slate-900/50 p-4 rounded-lg"><p className="text-slate-400 text-sm">Diferencia</p><p className={`text-2xl font-bold ${diferenciaTotal < 0 ? 'text-red-500' : 'text-green-400'}`}>{formatCurrency(diferenciaTotal)}</p></div>
+                        <div className="bg-slate-900 p-4 rounded-lg"><p className="text-slate-400 text-base">Saldo Total Teórico</p><p className="text-3xl font-bold text-yellow-400">{formatCurrency(totalTeorico)}</p></div>
+                        <div className="bg-slate-900 p-4 rounded-lg"><p className="text-slate-400 text-base">Saldo Total Real</p><p className="text-3xl font-bold text-green-400">{formatCurrency(totalReal)}</p></div>
+                        <div className="bg-slate-900 p-4 rounded-lg"><p className="text-slate-400 text-base">Diferencia</p><p className={`text-3xl font-bold ${diferenciaTotal < 0 ? 'text-red-500' : 'text-green-400'}`}>{formatCurrency(diferenciaTotal)}</p></div>
                     </div>
-                    <div className="mt-6"><label htmlFor="observaciones" className="text-sm font-medium text-slate-400 mb-1">Observaciones</label><textarea id="observaciones" value={report.observaciones} onChange={(e) => setReport(prev => ({...prev, observaciones: e.target.value}))} rows="4" className="w-full bg-slate-700/50 border border-slate-600 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-sky-500 focus:outline-none transition"></textarea></div>
+                    <div className="mt-6"><label htmlFor="observaciones" className="text-sm font-medium text-slate-400 mb-1">Observaciones</label><textarea id="observaciones" value={report.observaciones} onChange={(e) => setReport(prev => ({...prev, observaciones: e.target.value}))} rows="4" className="w-full bg-slate-700 border-2 border-slate-600 text-white rounded-lg p-2.5 focus:ring-2 focus:ring-blue-500 focus:outline-none transition"></textarea></div>
                 </div>
-                <div className="flex justify-end pt-4"><button type="submit" disabled={isSubmitting} className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-3 px-8 rounded-lg transition duration-300 disabled:bg-slate-500 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50">{isSubmitting ? 'Guardando...' : 'Guardar Reporte'}</button></div>
+                <div className="flex justify-end pt-4"><button type="submit" disabled={isSubmitting} className="bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold py-3 px-8 rounded-lg transition duration-300 disabled:bg-slate-500 shadow-lg shadow-blue-600/40 hover:shadow-blue-500/50">{isSubmitting ? 'Guardando...' : 'Guardar Reporte'}</button></div>
             </form>
         </div>
     );
@@ -314,34 +314,34 @@ const ReportList = ({ db, user, setView }) => {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
                 <div>
-                    <h1 className="text-2xl font-bold text-white">Historial de Cierres de Caja</h1>
+                    <h1 className="text-4xl font-extrabold text-white tracking-tight">Historial de Cierres</h1>
                     <p className="text-slate-400 mt-1">Aquí puedes ver, editar y aprobar los reportes.</p>
                 </div>
-                <button onClick={() => setView({ name: 'form' })} className="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50">Nuevo Cierre</button>
+                <button onClick={() => setView({ name: 'form' })} className="bg-blue-600 hover:bg-blue-500 text-white text-lg font-bold py-3 px-5 rounded-lg transition duration-300 shadow-lg shadow-blue-600/40 hover:shadow-blue-500/50">Nuevo Cierre</button>
             </div>
             
-            <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 rounded-xl shadow-xl p-4 mb-6 flex flex-col sm:flex-row items-center gap-4">
+            <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-2xl p-4 mb-6 flex flex-col sm:flex-row items-center gap-4">
                 <div className="flex-grow">
-                    <p className="text-white font-semibold mb-2">Exportar Reportes a Excel</p>
+                    <p className="text-white text-lg font-bold mb-2">Exportar Reportes a Excel</p>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div>
-                            <label className="text-xs text-slate-400">Fecha de Inicio</label>
-                            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full mt-1 p-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white" />
+                            <label className="text-sm font-bold text-slate-400">Fecha de Inicio</label>
+                            <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className="w-full mt-1 p-2 bg-slate-700 border-2 border-slate-600 rounded-lg text-white" />
                         </div>
                         <div>
-                            <label className="text-xs text-slate-400">Fecha de Fin</label>
-                            <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full mt-1 p-2 bg-slate-700/50 border border-slate-600 rounded-lg text-white" />
+                            <label className="text-sm font-bold text-slate-400">Fecha de Fin</label>
+                            <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className="w-full mt-1 p-2 bg-slate-700 border-2 border-slate-600 rounded-lg text-white" />
                         </div>
                     </div>
                 </div>
-                <button onClick={handleExport} className="w-full sm:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-lg shadow-green-600/30 hover:shadow-green-600/50 mt-4 sm:mt-0">Exportar a XLSX</button>
+                <button onClick={handleExport} className="w-full sm:w-auto bg-green-600 hover:bg-green-500 text-white text-lg font-bold py-3 px-5 rounded-lg transition duration-300 shadow-lg shadow-green-600/40 hover:shadow-green-500/50 mt-4 sm:mt-0">Exportar</button>
             </div>
 
-            <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 rounded-xl shadow-xl overflow-x-auto">
+            <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-x-auto">
                 <table className="w-full text-left text-slate-300">
-                    <thead className="bg-slate-900/50 text-xs text-slate-400 uppercase">
+                    <thead className="bg-slate-900/80 text-sm text-slate-400 uppercase">
                         <tr>
                             <th className="p-4">Fecha Cierre</th>
                             <th className="p-4">Creado por</th>
@@ -361,14 +361,14 @@ const ReportList = ({ db, user, setView }) => {
                                 <td className="p-4 font-mono text-right">{formatCurrency(r.calculos?.totalReal || 0)}</td>
                                 <td className={`p-4 font-mono text-right ${r.calculos?.diferenciaTotal < 0 ? 'text-red-400' : 'text-green-400'}`}>{formatCurrency(r.calculos?.diferenciaTotal || 0)}</td>
                                 <td className="p-4 text-center">
-                                    <span className={`px-3 py-1 rounded-full text-xs font-semibold ${r.estado === 'aprobado' ? 'bg-green-500/10 text-green-300 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/20'}`}>
+                                    <span className={`px-3 py-1 rounded-full text-sm font-semibold ${r.estado === 'aprobado' ? 'bg-green-500/10 text-green-300 border border-green-500/20' : 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/20'}`}>
                                         {r.estado}
                                     </span>
                                 </td>
                                 <td className="p-4 space-x-4 text-center">
-                                    <button onClick={() => setView({ name: 'detail', reportId: r.id })} className="font-semibold text-sky-400 hover:text-sky-300 transition">Ver</button>
-                                    {r.estado === 'pendiente' && canApprove && r.creadoPorId !== user.uid && <button onClick={() => handleApprove(r.id)} className="font-semibold text-green-400 hover:text-green-300 transition">Aprobar</button>}
-                                    {r.estado === 'pendiente' && r.creadoPorId === user.uid && <button onClick={() => setView({ name: 'form', reportToEdit: r })} className="font-semibold text-yellow-400 hover:text-yellow-300 transition">Editar</button>}
+                                    <button onClick={() => setView({ name: 'detail', reportId: r.id })} className="font-bold text-blue-400 hover:text-blue-300 transition">Ver</button>
+                                    {r.estado === 'pendiente' && canApprove && r.creadoPorId !== user.uid && <button onClick={() => handleApprove(r.id)} className="font-bold text-green-400 hover:text-green-300 transition">Aprobar</button>}
+                                    {r.estado === 'pendiente' && r.creadoPorId === user.uid && <button onClick={() => setView({ name: 'form', reportToEdit: r })} className="font-bold text-yellow-400 hover:text-yellow-300 transition">Editar</button>}
                                 </td>
                             </tr>
                         ))}
@@ -396,24 +396,24 @@ const ReportDetail = ({ db, setView, reportId }) => {
     const { creadoPorNombre, fechaCierre, denominaciones, montos, observaciones, calculos, estado, aprobadoPorNombre, fechaAprobacion } = report;
 
     const DetailCard = ({ title, children }) => (
-        <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 p-6 rounded-xl shadow-xl">
-            <h3 className="font-bold text-lg mb-4 text-sky-400 border-b border-slate-700 pb-3">{title}</h3>
-            <div className="space-y-2 text-sm">{children}</div>
+        <div className="bg-slate-800 border border-slate-700 p-6 rounded-xl shadow-2xl">
+            <h3 className="font-bold text-2xl mb-4 text-blue-400 border-b border-slate-700 pb-3">{title}</h3>
+            <div className="space-y-3 text-base">{children}</div>
         </div>
     );
 
     const DataRow = ({ label, value, className = 'text-slate-300' }) => (
         <div className="flex justify-between items-center">
             <span className="text-slate-400">{label}:</span>
-            <span className={`font-semibold ${className}`}>{value}</span>
+            <span className={`font-bold ${className}`}>{value}</span>
         </div>
     );
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
-            <div className="flex justify-between items-center mb-6">
-                 <h1 className="text-2xl font-bold text-white">Detalle de Reporte</h1>
-                 <button onClick={() => setView({ name: 'list' })} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-4 rounded-lg transition duration-300">Volver</button>
+            <div className="flex justify-between items-center mb-8">
+                 <h1 className="text-3xl font-extrabold text-white">Detalle de Reporte</h1>
+                 <button onClick={() => setView({ name: 'list' })} className="bg-slate-700 hover:bg-slate-600 text-white font-bold py-2 px-5 rounded-lg transition duration-300">Volver</button>
             </div>
             <div className="space-y-8">
                 <DetailCard title="Información General">
@@ -429,12 +429,12 @@ const ReportDetail = ({ db, setView, reportId }) => {
                 </DetailCard>
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <DetailCard title="Desglose Efectivo Real">
+                    <DetailCard title="Desglose Efectivo">
                         {Object.entries(denominaciones).map(([key, value]) => value > 0 && (
                             <DataRow key={key} label={key.replace('billete', 'Billetes $').replace('moneda', 'Monedas $')} value={value} />
                         ))}
                          <div className="border-t border-slate-700 mt-4 pt-4">
-                            <DataRow label="TOTAL EFECTIVO" value={formatCurrency(calculos.efectivoReal)} className="text-green-400 text-base" />
+                            <DataRow label="TOTAL EFECTIVO" value={formatCurrency(calculos.efectivoReal)} className="text-green-400 text-lg" />
                         </div>
                     </DetailCard>
                      <DetailCard title="Valores Teóricos">
@@ -444,7 +444,7 @@ const ReportDetail = ({ db, setView, reportId }) => {
                         <DataRow label="Prepago" value={formatCurrency(montos.prepagoTeorico)} />
                         <DataRow label="Transferencia" value={formatCurrency(montos.transferenciaTeorica)} />
                         <div className="border-t border-slate-700 mt-4 pt-4">
-                            <DataRow label="TOTAL TEÓRICO" value={formatCurrency(calculos.totalTeorico)} className="text-yellow-400 text-base" />
+                            <DataRow label="TOTAL TEÓRICO" value={formatCurrency(calculos.totalTeorico)} className="text-yellow-400 text-lg" />
                         </div>
                     </DetailCard>
                      <DetailCard title="Valores Reales">
@@ -454,7 +454,7 @@ const ReportDetail = ({ db, setView, reportId }) => {
                         <DataRow label="Prepago" value={formatCurrency(montos.prepagoReal)} />
                         <DataRow label="Transferencia" value={formatCurrency(montos.transferenciaReal)} />
                         <div className="border-t border-slate-700 mt-4 pt-4">
-                            <DataRow label="TOTAL REAL" value={formatCurrency(calculos.totalReal)} className="text-green-400 text-base" />
+                            <DataRow label="TOTAL REAL" value={formatCurrency(calculos.totalReal)} className="text-green-400 text-lg" />
                         </div>
                     </DetailCard>
                 </div>
@@ -501,10 +501,10 @@ const AdminPanel = ({ db }) => {
 
     return (
         <div className="p-4 sm:p-6 lg:p-8 max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold text-white mb-6">Panel de Administración</h1>
-            <div className="bg-slate-800/50 backdrop-blur-xl border border-sky-800/50 rounded-xl shadow-xl overflow-x-auto">
+            <h1 className="text-3xl font-extrabold text-white mb-6">Panel de Administración</h1>
+            <div className="bg-slate-800 border border-slate-700 rounded-xl shadow-2xl overflow-x-auto">
                 <table className="w-full text-left text-slate-300">
-                    <thead className="bg-slate-900/50 text-xs text-slate-400 uppercase">
+                    <thead className="bg-slate-900/80 text-sm text-slate-400 uppercase">
                         <tr><th className="p-4">Nombre</th><th className="p-4">Email</th><th className="p-4">Rol</th></tr>
                     </thead>
                     <tbody>
@@ -513,7 +513,7 @@ const AdminPanel = ({ db }) => {
                                 <td className="p-4">{user.nombre}</td>
                                 <td className="p-4">{user.email}</td>
                                 <td className="p-4">
-                                    <select value={user.role} onChange={(e) => handleRoleChange(user.id, e.target.value)} className="bg-slate-700/50 border border-slate-600 rounded-lg p-2 text-white focus:ring-2 focus:ring-sky-500">
+                                    <select value={user.role} onChange={(e) => handleRoleChange(user.id, e.target.value)} className="bg-slate-700 border-2 border-slate-600 rounded-lg p-2 text-white focus:ring-2 focus:ring-blue-500">
                                         <option value="usuario">Usuario</option>
                                         <option value="revisor">Revisor</option>
                                         <option value="administrador">Administrador</option>
@@ -538,7 +538,6 @@ export default function App() {
     const [view, setView] = useState({ name: 'list' });
 
     useEffect(() => {
-        // Cargar script de SheetJS para exportar a XLSX
         const script = document.createElement('script');
         script.src = "https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js";
         script.async = true;
@@ -600,7 +599,7 @@ export default function App() {
     };
 
     if (loading) {
-        return <div className="bg-blue-900 text-white min-h-screen flex items-center justify-center"><h1>Cargando...</h1></div>;
+        return <div className="bg-slate-900 text-white min-h-screen flex items-center justify-center"><h1>Cargando...</h1></div>;
     }
 
     if (!firebaseConfig.apiKey || firebaseConfig.apiKey === "TU_API_KEY") {
@@ -622,21 +621,21 @@ export default function App() {
     };
 
     return (
-        <div className="bg-gradient-to-br from-sky-900 to-blue-900 text-slate-100 min-h-screen font-sans">
-            <header className="bg-slate-800/50 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b border-sky-800/50">
+        <div className="bg-gradient-to-b from-slate-900 to-black text-slate-100 min-h-screen font-sans">
+            <header className="bg-slate-900/70 backdrop-blur-lg shadow-lg sticky top-0 z-50 border-b border-slate-700">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="flex justify-between items-center py-3">
                         <div className="flex items-center gap-2">
-                            <h1 className="text-xl font-bold tracking-tight">Caja Segura</h1>
+                            <h1 className="text-2xl font-bold tracking-tight text-white">Caja Segura</h1>
                         </div>
                         <div className="flex items-center space-x-4">
-                            {userData.role === 'administrador' && <button onClick={() => setView({name: 'admin'})} className="text-slate-300 hover:text-white transition font-semibold">Admin</button>}
-                            <button onClick={() => setView({name: 'list'})} className="text-slate-300 hover:text-white transition font-semibold">Reportes</button>
+                            {userData.role === 'administrador' && <button onClick={() => setView({name: 'admin'})} className="text-slate-300 hover:text-white transition font-bold text-lg">Admin</button>}
+                            <button onClick={() => setView({name: 'list'})} className="text-slate-300 hover:text-white transition font-bold text-lg">Reportes</button>
                             <div className="text-right">
-                                <p className="font-semibold text-sm">{userData.nombre}</p>
-                                <p className="text-xs text-slate-400 capitalize">{userData.role}</p>
+                                <p className="font-semibold text-base">{userData.nombre}</p>
+                                <p className="text-sm text-slate-400 capitalize">{userData.role}</p>
                             </div>
-                            <button onClick={handleLogout} title="Cerrar Sesión" className="flex items-center bg-red-600 hover:bg-red-700 text-white font-bold p-2 rounded-lg transition duration-300 shadow-lg shadow-red-600/30 hover:shadow-red-600/50">Cerrar Sesión</button>
+                            <button onClick={handleLogout} title="Cerrar Sesión" className="flex items-center bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition duration-300 shadow-lg shadow-red-600/40 hover:shadow-red-500/50">Cerrar Sesión</button>
                         </div>
                     </div>
                 </div>
