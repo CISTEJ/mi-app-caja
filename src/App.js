@@ -24,7 +24,7 @@ import {
 // --- CONFIGURACIÓN DE FIREBASE ---
 // REEMPLAZA ESTOS VALORES CON LA CONFIGURACIÓN DE TU PROYECTO DE FIREBASE
 const firebaseConfig = {
-    apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
+   apiKey: "AIzaSyDaKoae1hfnDPJlWLiM64fDq1-hPRivn44",
   authDomain: "cashing-out-app.firebaseapp.com",
   projectId: "cashing-out-app",
   storageBucket: "cashing-out-app.firebasestorage.app",
@@ -628,7 +628,7 @@ export default function App() {
                         <div className="flex items-center gap-2">
                             <h1 className="text-2xl font-bold tracking-tight text-white">Caja Segura</h1>
                         </div>
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-4 md:space-x-6">
                             {userData.role === 'administrador' && <button onClick={() => setView({name: 'admin'})} className="text-slate-300 hover:text-white transition font-bold text-lg">Admin</button>}
                             <button onClick={() => setView({name: 'list'})} className="text-slate-300 hover:text-white transition font-bold text-lg">Reportes</button>
                             <div className="text-right">
